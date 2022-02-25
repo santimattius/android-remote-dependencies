@@ -1,5 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+    apply from: "$baseUrl/versions.gradle"
 
     repositories {
         google()
@@ -21,10 +22,6 @@ allprojects {
     repositories {
         google()
         jcenter()
-    }
-
-    dependencies {
-        apply from: "$rootDir/dependencies.gradle"
     }
 }
 
