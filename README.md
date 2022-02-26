@@ -19,3 +19,5 @@ buildscript {
 }
 
 ```
+
+Check pull request migration: https://github.com/santimattius/android-remote-dependencies/pull/1
