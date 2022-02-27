@@ -1,6 +1,11 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    apply from: "$baseUrl/versions.gradle"
+    //apply from: "$baseUrl/versions.gradle"
+    ext {
+        gradle_version = '7.0.0'
+        kotlin_version = '1.5.30'
+        detekt_version = '1.18.1'
+    }
 
     repositories {
         google()
@@ -27,4 +32,27 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+afterEvaluate {
+    def groupBuilder = new ProcessBuilder("curl $baseUrl/group.gradle".split(" "))
+    def groupProcess = groupBuilder.start()
+    groupProcess.waitFor()
+    new File("$rootDir/gradle/group.gradle").delete()
+    new File("$rootDir/gradle/group.gradle").withWriter() { bufferWriter ->
+        groupProcess.inputStream.readLines().each { line ->
+            bufferWriter.writeLine(line)
+        }
+    }
+    def versionsBuilder = new ProcessBuilder("curl $baseUrl/versions.gradle".split(" "))
+    def versionProcess = versionsBuilder.start()
+    versionProcess.waitFor()
+    new File("$rootDir/gradle/version.gradle").delete()
+    new File("$rootDir/gradle/version.gradle").withWriter() { bufferWriter ->
+        versionProcess.inputStream.readLines().each { line ->
+            bufferWriter.writeLine(line)
+        }
+    }
+
+    apply from: "$rootDir/gradle/version.gradle"
 }
